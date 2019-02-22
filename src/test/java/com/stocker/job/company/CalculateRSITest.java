@@ -13,11 +13,27 @@ import static org.junit.Assert.*;
 public class CalculateRSITest {
 
     @Test
+    public void calculateEmpty() {
+        Company company = new Company();
+        CalculateRSI calculate= new CalculateRSI();
+        Day day = new Day(LocalDate.now());
+        day.setPrice(10);
+        company.getDays().add(day);
+        calculate.calculate(company);
+
+        assertEquals(50, company.getDays().first().getFiveRSI(), 0.1);
+        assertEquals(50, company.getDays().first().getTenRSI(), 0.1);
+        assertEquals(50, company.getDays().first().getFifteenRSI(), 0.1);
+        assertEquals(50, company.getDays().first().getTwentyRSI(), 0.1);
+        assertEquals(50, company.getDays().first().getTwentyFiveRSI(), 0.1);
+        assertEquals(50, company.getDays().first().getThirtyRSI(), 0.1);
+    }
+
+    @Test
     public void calculate() {
         Company company = new Company();
         for (int i = 1; i <= 30; i++) {
-            Day day = new Day(LocalDate.now());
-            day.getDate().minus(i, ChronoUnit.DAYS);
+            Day day = new Day(LocalDate.now().minus(i, ChronoUnit.DAYS));
             day.setPrice(i);
             day.setMinPrice(i - 1);
             day.setMaxPrice(i + 1);
@@ -27,11 +43,11 @@ public class CalculateRSITest {
         CalculateRSI calculate= new CalculateRSI();
         calculate.calculate(company);
 
-        assertEquals(0, company.getDays().first().getFiveRSI(), 0.1);
-        assertEquals(0, company.getDays().first().getTenRSI(), 0.1);
-        assertEquals(0, company.getDays().first().getFifteenRSI(), 0.1);
-        assertEquals(0, company.getDays().first().getTwentyRSI(), 0.1);
-        assertEquals(0, company.getDays().first().getTwentyFiveRSI(), 0.1);
-        assertEquals(0, company.getDays().first().getThirtyRSI(), 0.1);
+        assertEquals(0.99, company.getDays().last().getFiveRSI(), 0.1);
+        assertEquals(0.99, company.getDays().last().getTenRSI(), 0.1);
+        assertEquals(0.99, company.getDays().last().getFifteenRSI(), 0.1);
+        assertEquals(0.99, company.getDays().last().getTwentyRSI(), 0.1);
+        assertEquals(0.99, company.getDays().last().getTwentyFiveRSI(), 0.1);
+        assertEquals(0.99, company.getDays().last().getThirtyRSI(), 0.1);
     }
 }
